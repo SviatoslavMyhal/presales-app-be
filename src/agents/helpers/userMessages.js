@@ -56,6 +56,19 @@ ${tailContext(context, "Team expertise (optional)")}`;
 }
 
 /** @param {Record<string, unknown>} context */
+function intelligence(context) {
+  const agent1 = context.agent1 ?? context.analyst ?? context.agent1_output;
+  const jobPost = context.job_post ?? "";
+  return `Job post / project description:
+${jobPost}
+
+Agent 1 (Analyst) output:
+${formatOptional(agent1)}
+
+${tailContext(context, "Team expertise / tech stack (optional)")}`;
+}
+
+/** @param {Record<string, unknown>} context */
 function synthesis(context) {
   const agent1 = context.analyst ?? context.agent1_output;
   const agent2 = context.risk ?? context.agent2_output;
@@ -80,5 +93,6 @@ module.exports = {
   analyst,
   risk,
   strategy,
+  intelligence,
   synthesis,
 };

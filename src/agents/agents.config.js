@@ -31,4 +31,11 @@ module.exports = {
       "\n\nReminder: Your entire reply must be a single JSON object matching the schema. Assemble sections 1–7 from upstream JSON; do not output markdown sections. No text outside JSON.",
     chatOptions: { max_tokens: 4096 },
   },
+  intelligence: {
+    skillFileName: "intelligenceAgent.md",
+    agentKey: "intelligence",
+    reminder:
+      "\n\nReminder: Your entire reply must be a single JSON object matching the Output shape in the skill. Top-level keys: confidence, client_type, suggested_pitch. No markdown, no text outside JSON.",
+    chatOptions: {},
+  },
 };
