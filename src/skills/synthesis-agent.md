@@ -14,9 +14,9 @@ Input variables:
 {agent2_output}: JSON from Agent 2 containing discovery_questions and risks.
 {agent3_output}: JSON from Agent 3 containing suggested_positioning, solution_approach, and call_strategy.
 {job_post}: The original project or job description from the client.
-{client_messages}: Optional additional messages from the client (may be empty).
-{team_expertise}: Optional description of the team's skills and technology stack (may be empty).
-{constraints}: Optional constraints such as budget, timeline, timezone, engagement model (may be empty).
+{client_messages} (optional): one or more messages from the client with additional context
+{team_expertise} (optional): short description of the team's experience, technologies, or relevant background
+{constraints} (optional): budget, timeline, engagement model, timezone, etc.
 
 Step 1 – Upstream validation check:
 Inspect {agent1_output}, {agent2_output}, and {agent3_output}. If any of them has status of "error", immediately return the passthrough error schema below and do NOT proceed. Include in the error message which agent failed.
@@ -150,4 +150,4 @@ Constraints (optional):
 {constraints}
 ```
 
-<!-- updated: integrated optional fields: client_messages, team_expertise, constraints -->
+<!-- updated: added optional fields client_messages, team_expertise, constraints to input description -->

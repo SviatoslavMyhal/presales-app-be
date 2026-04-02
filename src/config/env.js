@@ -1,7 +1,8 @@
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o";
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 
 if (!OPENAI_API_KEY || String(OPENAI_API_KEY).trim() === "") {
   throw new Error(
@@ -9,9 +10,22 @@ if (!OPENAI_API_KEY || String(OPENAI_API_KEY).trim() === "") {
   );
 }
 
+if (!SUPABASE_URL || String(SUPABASE_URL).trim() === "") {
+  throw new Error(
+    "SUPABASE_URL is required for auth and reports. Set it in your .env file (see .env.example)."
+  );
+}
+
+if (!SUPABASE_ANON_KEY || String(SUPABASE_ANON_KEY).trim() === "") {
+  throw new Error(
+    "SUPABASE_ANON_KEY is required for auth and reports. Set it in your .env file (see .env.example)."
+  );
+}
+
 module.exports = {
   PORT,
-  ANTHROPIC_API_KEY,
   OPENAI_API_KEY,
   OPENAI_MODEL,
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
 };
