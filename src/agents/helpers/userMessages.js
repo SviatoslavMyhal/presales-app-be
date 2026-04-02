@@ -69,6 +69,32 @@ ${tailContext(context, "Team expertise / tech stack (optional)")}`;
 }
 
 /** @param {Record<string, unknown>} context */
+function proposal(context) {
+  const synthesisReport = context.synthesis_report ?? context.synthesis;
+  const intelligence = context.intelligence;
+  const jobPost = context.job_post ?? "";
+  const senderName = context.sender_name ?? "";
+  const companyName = context.company_name ?? "";
+
+  return `Synthesis report (full JSON):
+${formatOptional(synthesisReport)}
+
+Intelligence output:
+${formatOptional(intelligence)}
+
+Original job post:
+${jobPost}
+
+Sender name (optional):
+${formatOptional(senderName)}
+
+Company / agency name (optional):
+${formatOptional(companyName)}
+
+${tailContext(context, "Team expertise (optional)")}`;
+}
+
+/** @param {Record<string, unknown>} context */
 function synthesis(context) {
   const agent1 = context.analyst ?? context.agent1_output;
   const agent2 = context.risk ?? context.agent2_output;
@@ -94,5 +120,6 @@ module.exports = {
   risk,
   strategy,
   intelligence,
+  proposal,
   synthesis,
 };

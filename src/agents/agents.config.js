@@ -38,4 +38,11 @@ module.exports = {
       "\n\nReminder: Your entire reply must be a single JSON object matching the Output shape in the skill. Top-level keys: confidence, client_type, suggested_pitch. No markdown, no text outside JSON.",
     chatOptions: {},
   },
+  proposal: {
+    skillFileName: "proposalAgent.md",
+    agentKey: "proposal",
+    reminder:
+      "\n\nReminder: Your entire reply must be a single JSON object matching the Output shape in the skill. Top-level keys: subject, greeting, sections, closing, signature, meta. No markdown, no text outside JSON.",
+    chatOptions: { max_tokens: 4096 },
+  },
 };

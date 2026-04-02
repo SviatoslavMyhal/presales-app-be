@@ -1,5 +1,10 @@
 # Proposal Agent Skill
 
+## Mandatory output format
+- Reply with **exactly one JSON object** (valid JSON, UTF-8). Match the **Output shape** below.
+- Do **not** wrap the JSON in markdown code fences. Do **not** add headings, bold text, or prose before or after the JSON.
+- Top-level keys must be: `subject`, `greeting`, `sections`, `closing`, `signature`, `meta`. The server accepts this object with or without an outer `{ "data": { ... } }` wrapper.
+
 ## Purpose
 Generates a professional, personalized proposal draft that a freelancer or agency
 can send to a client after a presales discovery call. The output is ready-to-send
