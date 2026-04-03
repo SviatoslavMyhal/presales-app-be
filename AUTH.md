@@ -20,7 +20,7 @@ This backend uses the **Publishable (anon)** key plus the caller’s `Authorizat
 1. **Create a project** and copy **Project URL** and the **Publishable** key (use it as `SUPABASE_ANON_KEY`).
 2. **Authentication → Providers → Email** — enable email/password. Adjust “Confirm email” for dev vs production.
 3. **Authentication → URL configuration** — set **Site URL** and **Redirect URLs** for your frontend (e.g. `http://localhost:3000`).
-4. **SQL → New query** — run `supabase/migrations/001_reports.sql` to create `public.reports` and RLS policies.
+4. **SQL → New query** — run `supabase/migrations/001_reports.sql`, then `002_reports_job_post.sql` (adds `job_post` column), to create/update `public.reports` and RLS policies.
 5. Confirm **Table Editor → reports** exists and RLS is enabled.
 
 ## API usage (typical SPA)
@@ -29,12 +29,12 @@ This backend uses the **Publishable (anon)** key plus the caller’s `Authorizat
 2. Store tokens per your security model (memory, secure storage). For subsequent calls:  
    `Authorization: Bearer <access_token>`
 3. `GET /api/auth/me` — requires a valid Bearer token.
-4. `POST /api/reports` — body `{ "title"?: string, "payload": <json> }` — saves arbitrary JSON (e.g. full presales result).
+4. `POST /api/reports` — body `{ "title"?: string, "job_post"?: string, "payload": <json> }` — saves arbitrary JSON (e.g. full presales result). Optional `job_post` is stored on the row and returned on list/get for UI (same as `/api/presales/analyze/save`).
 5. `GET /api/reports` — list current user’s reports (query: `limit`, `offset`).
 6. `GET /api/reports/:id` — one report if it belongs to the user.
 7. `DELETE /api/reports/:id` — delete a report you own (204 on success; 404 if missing or not yours).
 8. `GET /api/analytics/summary` — dashboard aggregates derived from your saved `reports.result` rows in Supabase (requires Bearer). **`summary.source_rows`** = rows returned from Postgres for your user (RLS). **`summary.total_reports`** = rows successfully scored for the dashboard. **`meta`** duplicates `{ source_rows, scored_count }` for convenience. If `source_rows` is 0, the token user has no reports or is not the account that created them. If `source_rows` > 0 but `total_reports` / `scored_count` is 0, stored `result` payloads could not be parsed or scored (check server logs).
-9. `POST /api/presales/analyze/save` — same body as `/api/presales/analyze` plus optional `title`; runs the pipeline and saves the result in one step (requires auth).
+9. `POST /api/presales/analyze/save` — same body as `/api/presales/analyze` plus optional `title`; runs the pipeline and saves the result in one step, including `job_post` on the saved report (requires auth).
 
 `POST /api/presales/analyze` stays **public** (no auth).
 

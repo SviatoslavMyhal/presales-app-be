@@ -52,6 +52,7 @@ async function analyzeSave(req, res) {
     accessToken: req.accessToken,
     userId: req.user.id,
     title,
+    job_post: input.job_post,
     result,
   });
 

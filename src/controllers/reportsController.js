@@ -5,7 +5,7 @@ const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
 
 async function create(req, res) {
-  const { title, payload } = req.body ?? {};
+  const { title, payload, job_post } = req.body ?? {};
   if (payload === undefined || payload === null) {
     return res.status(400).json({ error: "payload is required" });
   }
@@ -14,6 +14,7 @@ async function create(req, res) {
     accessToken: req.accessToken,
     userId: req.user.id,
     title,
+    job_post,
     result: payload,
   });
 
@@ -40,7 +41,7 @@ async function list(req, res) {
   const supabase = createClientWithUserAccessToken(req.accessToken);
   const { data, error } = await supabase
     .from("reports")
-    .select("id, user_id, title, created_at, updated_at")
+    .select("id, user_id, title, job_post, created_at, updated_at")
     .order("created_at", { ascending: false })
     .range(offset, offset + limit - 1);
 
@@ -60,7 +61,7 @@ async function getById(req, res) {
   const supabase = createClientWithUserAccessToken(req.accessToken);
   const { data, error } = await supabase
     .from("reports")
-    .select("id, user_id, title, result, created_at, updated_at")
+    .select("id, user_id, title, job_post, result, created_at, updated_at")
     .eq("id", id)
     .maybeSingle();
 
