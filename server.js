@@ -30,6 +30,50 @@ const ENDPOINTS = [
     path: "/api/proposal/generate",
     description: "Generate proposal draft from synthesis + intelligence (standalone)",
   },
+  {
+    method: "POST",
+    path: "/api/presales/prescreen",
+    description: "Fast red-flag triage before full analysis (no auth)",
+  },
+  {
+    method: "POST",
+    path: "/api/call-script/generate",
+    description: "Timed discovery call script from synthesis + intelligence",
+  },
+  {
+    method: "POST",
+    path: "/api/objections/generate",
+    description: "Likely objections and responses from report context",
+  },
+  {
+    method: "POST",
+    path: "/api/competitors/generate",
+    description: "Competitor archetypes and positioning lines",
+  },
+  {
+    method: "POST",
+    path: "/api/follow-up/generate",
+    description: "Post-call follow-up email from notes",
+  },
+  {
+    method: "POST",
+    path: "/api/briefings",
+    description: "Create shareable client briefing (requires Bearer)",
+  },
+  {
+    method: "GET",
+    path: "/api/public/briefings/:slug",
+    description: "Fetch public briefing JSON by slug (service role on server)",
+  },
+  { method: "POST", path: "/api/deal/analyze", description: "PreSalesAI: full pipeline + insights (TS module)" },
+  { method: "POST", path: "/api/deal/questions", description: "PreSalesAI: categorized discovery questions" },
+  { method: "POST", path: "/api/deal/solution", description: "PreSalesAI: solution variants (fast vs scalable)" },
+  { method: "POST", path: "/api/deal/risks", description: "PreSalesAI: psychology / risk lens" },
+  { method: "GET", path: "/api/deal/:id/insights", description: "PreSalesAI: stored insights for deal id" },
+  { method: "GET", path: "/api/deal/memory/recent", description: "PreSalesAI: recent deal fingerprints" },
+  { method: "GET", path: "/api/deal/memory/similar", description: "PreSalesAI: similar past deals (?q=)" },
+  { method: "POST", path: "/api/call/live-assist", description: "PreSalesAI: structured live assist from transcript" },
+  { method: "POST", path: "/api/call/live-assist/stream", description: "PreSalesAI: SSE token stream for live assist" },
 ];
 
 app.listen(PORT, () => {

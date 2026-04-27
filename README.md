@@ -11,6 +11,7 @@ REST API built with **Node.js** and **Express** for multi-agent presales analysi
 | **Presales pipeline** | Accepts `job_post` (required) and optionally client messages, team expertise, and constraints. Runs a chain of LLM agents and returns JSON: analysis, risks, strategy, synthesized report, and an **intelligence** block (confidence score, client type, pitch). |
 | **Storage & analytics** | Authenticated users save analysis results in Supabase, list their reports, and view aggregated analytics over their own data. |
 | **Proposal** | A separate endpoint builds an email-style proposal draft from an existing synthesis + intelligence payload (without re-running the full pipeline). |
+| **PreSalesAI (TS module)** | Optional **`/api/deal/*`** and **`/api/call/*`** endpoints: structured insights, categorized questions, solution variants, psychology/risk lens, knowledge memory, live assist (incl. SSE). See [**docs/architecture/PRESALES_AI_ARCHITECTURE.md**](./docs/architecture/PRESALES_AI_ARCHITECTURE.md). Run **`npm run build`** before start (or use `prestart`). |
 
 **`POST /api/presales/analyze`** is public (no token). Persisting reports and user-scoped data requires a Supabase **Bearer** token.
 
@@ -22,7 +23,7 @@ For auth, RLS, and the `reports` table in detail, see [**AUTH.md**](./AUTH.md).
 
 - **Runtime:** Node.js  
 - **Framework:** Express, `express-async-errors`, CORS  
-- **AI:** OpenAI API (`openai` SDK; model set in `.env`)  
+- **AI:** OpenAI API (`openai` SDK; model set in `.env`); **PreSalesAI** modules use **TypeScript** + **Zod** (`src/presales-ai/`, output in `dist/presales-ai/`)  
 - **Database / auth:** Supabase (`@supabase/supabase-js`)
 
 ---
@@ -61,6 +62,17 @@ flowchart TB
 
 Orchestration: `src/services/agentOrchestrator.js`.
 
+### Standalone generators (after analysis)
+
+| Tool | Skill | Endpoint |
+|------|-------|----------|
+| Call script (timed blocks) | `callScriptAgent.md` | `POST /api/call-script/generate` |
+| Objection handler | `objectionAgent.md` | `POST /api/objections/generate` |
+| Pre-screen (red flags) | `preScreenAgent.md` | `POST /api/presales/prescreen` |
+| Competitor positioning | `competitorAgent.md` | `POST /api/competitors/generate` |
+| Post-call follow-up email | `followUpAgent.md` | `POST /api/follow-up/generate` |
+| Client-facing pre-call briefing + share link | `smartBriefingAgent.md` | `POST /api/briefings` — `GET /api/public/briefings/:slug` |
+
 ---
 
 ## Requirements
@@ -91,6 +103,7 @@ Create a **`.env`** file in the repository root:
 | `OPENAI_MODEL` | no | Defaults to `gpt-4o` |
 | `SUPABASE_URL` | yes | Supabase project URL |
 | `SUPABASE_ANON_KEY` | yes | Publishable (anon) key — not the service role |
+| `SUPABASE_SERVICE_ROLE_KEY` | no | Optional fallback for public briefing GET if migration `004_get_briefing_by_slug_rpc.sql` is not applied |
 | `PORT` | no | HTTP port; defaults to `3000` |
 
 Example (replace with your values):
@@ -131,9 +144,16 @@ The server listens on `http://localhost:3000` (or your `PORT`). Available routes
 | `GET` | `/api/analytics/summary` | Bearer |
 | `POST` | `/api/presales/analyze` | — |
 | `POST` | `/api/presales/analyze/save` | Bearer |
+| `POST` | `/api/presales/prescreen` | — |
 | `POST` | `/api/proposal/generate` | — |
+| `POST` | `/api/call-script/generate` | — |
+| `POST` | `/api/objections/generate` | — |
+| `POST` | `/api/competitors/generate` | — |
+| `POST` | `/api/follow-up/generate` | — |
+| `POST` | `/api/briefings` | Bearer |
+| `GET` | `/api/public/briefings/:slug` | — |
 
-Request bodies and token usage examples are documented in [**AUTH.md**](./AUTH.md).
+Request bodies and token usage examples are documented in [**AUTH.md**](./AUTH.md). Public briefings use an RPC after migration **004**; service role is optional.
 
 ---
 
@@ -150,7 +170,7 @@ Request bodies and token usage examples are documented in [**AUTH.md**](./AUTH.m
 │   ├── controllers/
 │   ├── routes/
 │   └── middleware/
-└── supabase/migrations/   # SQL for reports table (RLS)
+└── supabase/migrations/   # reports, job_post, client_briefings (RLS)
 ```
 
 ---

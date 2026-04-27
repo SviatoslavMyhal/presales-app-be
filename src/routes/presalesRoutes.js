@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post("/analyze", presalesController.analyze);
 router.post("/analyze/save", requireAuth, presalesController.analyzeSave);
+router.post("/prescreen", presalesController.prescreen);
 
 module.exports = router;

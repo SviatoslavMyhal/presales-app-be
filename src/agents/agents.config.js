@@ -45,4 +45,46 @@ module.exports = {
       "\n\nReminder: Your entire reply must be a single JSON object matching the Output shape in the skill. Top-level keys: subject, greeting, sections, closing, signature, meta. No markdown, no text outside JSON.",
     chatOptions: { max_tokens: 4096 },
   },
+  callScript: {
+    skillFileName: "callScriptAgent.md",
+    agentKey: "call_script",
+    reminder:
+      "\n\nReminder: Your entire reply must be a single JSON object matching the Output shape. Top-level key: phases (array). No markdown, no text outside JSON.",
+    chatOptions: { max_tokens: 4096 },
+  },
+  objection: {
+    skillFileName: "objectionAgent.md",
+    agentKey: "objection",
+    reminder:
+      "\n\nReminder: Your entire reply must be a single JSON object matching the Output shape. Top-level key: objections (array, 5–7 items). No markdown, no text outside JSON.",
+    chatOptions: { max_tokens: 4096 },
+  },
+  preScreen: {
+    skillFileName: "preScreenAgent.md",
+    agentKey: "pre_screen",
+    reminder:
+      "\n\nReminder: Your entire reply must be a single JSON object matching the Output shape. No markdown, no text outside JSON.",
+    chatOptions: { max_tokens: 1200 },
+  },
+  competitor: {
+    skillFileName: "competitorAgent.md",
+    agentKey: "competitor",
+    reminder:
+      "\n\nReminder: Your entire reply must be a single JSON object matching the Output shape. Top-level key: scenarios. No markdown, no text outside JSON.",
+    chatOptions: { max_tokens: 2048 },
+  },
+  followUp: {
+    skillFileName: "followUpAgent.md",
+    agentKey: "follow_up",
+    reminder:
+      "\n\nReminder: Your entire reply must be a single JSON object with subject and body. No markdown, no text outside JSON.",
+    chatOptions: { max_tokens: 2048 },
+  },
+  smartBriefing: {
+    skillFileName: "smartBriefingAgent.md",
+    agentKey: "smart_briefing",
+    reminder:
+      "\n\nReminder: Your entire reply must be a single JSON object matching the Output shape. No markdown, no text outside JSON.",
+    chatOptions: { max_tokens: 4096 },
+  },
 };

@@ -1,4 +1,5 @@
 const agentOrchestrator = require("../services/agentOrchestrator");
+const preScreenAgent = require("../agents/preScreenAgent");
 const { insertReport } = require("../services/reportStorage");
 
 function trimOptionalField(value) {
@@ -66,7 +67,29 @@ async function analyzeSave(req, res) {
   });
 }
 
+/**
+ * Fast red-flag triage before running the full pipeline (cheap prompt).
+ */
+async function prescreen(req, res) {
+  const { job_post, client_messages, team_expertise, constraints } = req.body;
+
+  if (!job_post || !String(job_post).trim()) {
+    return res.status(400).json({ error: "job_post is required" });
+  }
+
+  const input = {
+    job_post: String(job_post).trim(),
+    client_messages: trimOptionalField(client_messages),
+    team_expertise: trimOptionalField(team_expertise),
+    constraints: trimOptionalField(constraints),
+  };
+
+  const result = await preScreenAgent.run(input);
+  return res.status(200).json(result);
+}
+
 module.exports = {
   analyze,
   analyzeSave,
+  prescreen,
 };
